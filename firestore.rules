@@ -1,0 +1,24 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Main employee data - for listing and dashboards
+    match /employeelist/{employeeId} {
+      allow read: if request.auth != null;  // Authenticated users can read
+      allow write: if false;               
+    }
+    
+    //Monitor - for at-risk employees
+    match /monitor/{employeeId} {
+      allow read, write, create, update, delete: if request.auth != null; 
+      //Authenticated users can perform all opertaions
+    }
+
+    // Whitelist - for signup validation
+    match /whitelist/{employeeId} {
+      allow get: if true;    // Allow unauthenticated GET for signup validation
+      allow list: if false;  // Prevent listing the whole whitelist
+      allow write: if false; // No public writes
+    }
+
+  }
+}
