@@ -1,0 +1,611 @@
+:root {
+  font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 14px;
+}
+
+*{
+  margin:0;
+  padding:0;
+}
+/* Common header styles */
+.app-header, .auth-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* padding: 1rem 2rem; */
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 60px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-right {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.app-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+}
+
+.logo {
+  padding-left: 30px;
+  height: 40px;
+  width: auto;
+}
+
+.header-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: none;
+}
+
+
+/* login and sign up pages */
+
+.login-container , .signup-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 92vh;
+  background: linear-gradient(90deg, #737CDE 0%, #706CC8 50%, #6F60B8 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login , .signup{
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 28px;
+  color: #2c3e50;
+  margin-bottom: 5px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.bg-text {
+  color: #687071;
+  font-size: 15px;
+  margin: 0 0 25px 0;
+  text-align: center;
+}
+
+.bg-text a {
+  color: #737CDE;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.bg-text a:hover {
+  text-decoration: underline;
+}
+
+.side-title {
+  color: #2c3e50;
+  font-size: 14px;
+  margin: 15px 0 5px 0;
+  font-weight: 500;
+}
+
+.login input ,.signup input{
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.login input:focus , .signup input:focus {
+  outline: none;
+  border-color: #737CDE;
+}
+
+.login button , .signup button{
+  width: 100%;
+  padding: 12px;
+  background-color: #737CDE;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.3s;
+}
+
+.login button:hover, .login button:hover {
+  background-color: #5f6bc7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.error {
+  color: #e74c3c;
+  font-size: 14px;
+  margin: 10px 0 0 0;
+  text-align: center;
+}
+
+/* Auth page specific header */
+.auth-header {
+  justify-content: center;
+}
+
+.auth-header .header-center,
+.auth-header .header-right {
+  display: none;
+}
+
+/* Dashboard page header styles */
+.dashboard-button {
+  color: #2563eb;
+}
+
+.dashboard-button:hover {
+  background-color: #dbeafe;
+}
+
+.list-button {
+  color: #059669;
+}
+
+.list-button:hover {
+  background-color: #d1fae5;
+}
+
+.danger-button {
+  color: #dc2626;
+}
+
+.danger-button:hover {
+  background-color: #fee2e2;
+}
+
+.logout-button {
+  color: #6b7280;
+  border: 0px solid #e5e7eb;
+}
+
+.logout-button:hover {
+  background-color: #f3f4f6;
+}
+
+.employee-list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.employee-list-container h1 {
+  color: #333;
+  text-align: center;
+}
+
+.search-container {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+}
+
+.search-container input {
+  flex: 1;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.search-container button {
+  padding: 8px 16px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.table-responsive {
+  align-items: center;
+  width: 80%;
+  overflow-x: auto;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  color: #717372;
+}
+td{
+  font-weight: 500;
+}
+tr:hover {
+  background-color: #f5f5f5;
+}
+
+.dept-label {
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.dept-label.sales {
+  background-color: #edafaf;
+}
+
+.dept-label.r-d{
+  background-color: #afd3f3;
+}
+
+.dept-label.hr{
+  background-color: #bffbbf;
+}
+
+.role-label {
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Example styles for roles */
+.role-label.healthcare-rep {
+  background-color: #d1f0ff;
+}
+
+.role-label.human-resources {
+  background-color: #ffe0f0;
+}
+
+.role-label.lab-tech {
+  background-color: #e0e0ff;
+}
+
+.role-label.manager {
+  background-color: #d9ffd9;
+}
+
+.role-label.manufacturing-director {
+  background-color: #fff0cc;
+}
+
+.role-label.research-director {
+  background-color: #e5e5e5;
+}
+
+.role-label.research-scientist {
+  background-color: #e6ffea;
+}
+
+.role-label.sales-executive {
+  background-color: #ffe0b3;
+}
+
+.role-label.sales-rep {
+  background-color: #ffcccc;
+}
+
+.search-container{
+  width: 80%;
+}
+
+/*actions*/
+.emp-actions{
+  align-items: center;
+  width: 50px;
+  padding-right: 50px;
+  padding-left: 20px;
+}
+.emp-dash {
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.icon {
+  font-size: 18px;
+  color: #75e0dd;
+  transition: opacity 0.3s ease;
+}
+
+
+.icon-wrapper {
+  width: 18px;
+  height: 18px;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  font-size: 18px;
+  color: #374151;
+}
+
+.icon-wrapper:hover {
+  width: 22px;  /* Expands when hovered */
+  height: 18px;
+  background-color: #f0f0f0;
+}
+
+.icon-label {
+  opacity: 0;
+  position: absolute;
+  font-size: 12px;
+  color: #1e40af;
+  pointer-events: none;
+}
+
+.icon-wrapper:hover .icon-label {
+  opacity: 1;
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #7ae0cf;
+}
+
+.emp-dash:hover .icon-wrapper:not(:hover) {
+  transform: scale(0.9);
+  opacity: 0.7;
+}
+
+/* src/components/PaginationControls.css */
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.pagination-button {
+  border: none;
+  background-color: #8bb2d9;
+  color: white;
+  font-size: 18px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.pagination-button:hover{
+  background-color: #76b0ea;
+}
+
+.pagination-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.page-indicator {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ce93d8;
+  color: #fff;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.loading-indicator {
+  margin-left: 10px;
+  font-size: 14px;
+  color: #999;
+}
+
+
+.dashboard{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.dash-title{
+  background: linear-gradient(90deg, #F7BFD4 0%, #FFEEE5 50.81%, #C1ECF3 100%);
+  /* width: 100%; */
+  width: 90%;
+  padding: 48px 36px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+
+
+
+/* profile part */
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 16px;
+}
+
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+  background: #f0f0f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  margin-right: 20px;
+}
+
+.profile-info h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.profile-info p {
+  margin: 6px 0 0;
+  color: #777;
+}
+
+.profile-section {
+  margin-bottom: 32px;
+}
+
+.profile-section h2 {
+  font-size: 20px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 4px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 32px;
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-field label {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.profile-field input {
+  padding: 8px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+}
+
+.profile-field span {
+  padding: 8px 0;
+}
+
+.profile-actions {
+  text-align: right;
+}
+
+.btn {
+  padding: 10px 20px;
+  margin-left: 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn.edit {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.btn.save {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.btn.cancel {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.profile-container {
+  position: relative;  /* Needed for LEFT stamp overlay */
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 32px;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+
+.left-stamp {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-20deg);
+  font-size: 180px;
+  color: rgba(220, 53, 69, 0.2); /* Bootstrap's danger color, lightened */
+  font-weight: 700;
+  letter-spacing: 5px;
+  pointer-events: none; /* So you can still click buttons underneath */
+  user-select: none;
+  z-index: 10;
+  border: 8px solid rgba(220, 53, 69, 0.2);
+}
