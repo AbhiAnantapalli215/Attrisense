@@ -13,7 +13,7 @@ firebase-debug.log
 app/.env
 
 # Firebase service account — NEVER COMMIT THIS!
-app/serviceAccountKey.json
+serviceAccountKey.json
 
 # OS files
 .DS_Store
