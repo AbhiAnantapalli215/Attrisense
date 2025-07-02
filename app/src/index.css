@@ -61,11 +61,13 @@
 
 .login-container , .signup-container{
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 92vh;
   background: linear-gradient(90deg, #737CDE 0%, #706CC8 50%, #6F60B8 100%);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  gap: 1rem;
 }
 
 .login , .signup{
@@ -472,8 +474,8 @@ button {
 
 .dash-title{
   background: linear-gradient(90deg, #F7BFD4 0%, #FFEEE5 50.81%, #C1ECF3 100%);
-  /* width: 100%; */
-  width: 90%;
+  /* background: linear-gradient(135deg, #55b8a4, #16ebc0, #2abec6); */
+  width: 92%;
   padding: 48px 36px;
   display: flex;
   flex-direction: column;
@@ -608,4 +610,284 @@ button {
   user-select: none;
   z-index: 10;
   border: 8px solid rgba(220, 53, 69, 0.2);
+}
+
+
+/* Dashboard Part */
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.dash-title {
+  text-align: center;
+}
+
+.chart-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.chart-container1 {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 1rem;
+  flex: 1 1 40%; 
+  min-width: 300px;
+  max-width: 600px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* centers vertically */
+  align-items: center;     /* centers horizontally */
+  text-align: center; 
+  gap:2rem;
+}
+
+.chart-container2 {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 1rem;
+  width: 100%;
+}
+
+.chart-container3 {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 1rem;
+  width: 370px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* centers vertically */
+  align-items: center;     /* centers horizontally */
+  text-align: center; 
+  gap:2rem;
+}
+
+.chart-container4 {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  width: 45%;
+  align-items: center;     /* centers vertically */
+}
+
+.chart-container5 {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  height: 300px;
+  width: 300px;
+  display: flex;
+  padding:1rem;
+  flex-direction: column;
+}
+
+.chart-container2 select {
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.update-metrics-btn {
+  margin: 2rem auto;
+  display: block;
+  padding: 0.75rem 1.5rem;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.update-metrics-btn:hover {
+  background: #0056b3;
+}
+
+.kpicardsholder{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 40%; 
+  width: 600px;
+}
+
+.kpi-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.0rem;
+  margin: 2rem 0;
+}
+
+.kpi-cards{
+  display: grid;
+  gap: 1.0rem;
+}
+
+.kpi-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  max-height: 150px;
+}
+.kpi-card-attrition{
+  width: 100%;
+}
+.kpi-card:hover {
+  transform: translateY(-5px);
+}
+
+.kpi-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.kpi-card h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.kpi-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 0.4rem 0;
+}
+
+.kpi-description {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.kpi-card.negative .kpi-value {
+  color: #ffc61a;
+}
+
+.kpi-card.positive .kpi-value {
+  color: #43a047;
+}
+
+/* Center the button container */
+.back-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+/* Style the button itself */
+.back-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #ffc107;
+  color: #000000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: #c0e2f4;
+}
+
+.bad-negative{
+  color: #e24646;
+  font-weight: 500;
+}
+
+
+
+/* Flex container for ID + Role */
+.signup-inline-group {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.signup-inline-group .inline-input,
+.signup-inline-group .inline-select {
+  flex: 1; /* make them share space equally */
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+  margin: 5px 0; /* match input spacing */
+}
+
+.signup-inline-group .inline-input:focus,
+.signup-inline-group .inline-select:focus {
+  outline: none;
+  border-color: #737CDE;
+}
+
+/* Remove default arrow style for select on WebKit */
+.signup-inline-group .inline-select {
+  appearance: none;
+  background: url('data:image/svg+xml;utf8,<svg fill="%23737CDE" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>')
+    no-repeat right 10px center;
+  background-color: white;
+  background-size: 16px;
+}
+
+
+/*Demo user*/
+/* Container already exists as .white-conatainer - no background needed */
+
+.white-conatainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  border: 2px solid white;
+  width: 400px;
+  border-radius: 8px;
+  height: 120px;
+  justify-content: center;
+}
+
+.demo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.demo-button {
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  width: 350px;
+  margin-top: 10px;
+  font-weight: 750;
+}
+
+.demo-button:hover {
+  background-color: white;
+  color: #505aa5;
+}
+
+.demo-text {
+  /* margin-top: 8px; */
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
 }

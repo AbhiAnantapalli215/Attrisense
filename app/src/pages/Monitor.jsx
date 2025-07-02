@@ -4,12 +4,14 @@ import {
   getDocs,
   deleteDoc,
   doc,
-  updateDoc
+  updateDoc,
+  getDoc
 } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db, auth } from '../firebase';
 import { Button, TextField, Typography, Box, Paper } from '@mui/material';
 import { green, orange, red } from '@mui/material/colors';
 import { useSnackbar } from 'notistack';
+import { useNavigate } from 'react-router-dom'; // ✅ Fix this import
 
 const getStatusColor = (status) => {
   switch (status) {
@@ -21,11 +23,39 @@ const getStatusColor = (status) => {
 };
 
 const Monitor = () => {
-  const hrNumber = localStorage.getItem('employeeNumber');
+  const [hrNumber, setHrNumber] = useState(0);
   const [employees, setEmployees] = useState([]);
   const [activeRemark, setActiveRemark] = useState(null);
   const [tempRemark, setTempRemark] = useState('');
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate(); // ✅ Correct usage
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        console.log("No user is logged in");
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const docRef = doc(db, "userData", user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          setHrNumber(userData.EmployeeNumber);
+        } else {
+          console.log("No userData found for this user");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
 
   const fetchData = async () => {
     const querySnapshot = await getDocs(collection(db, 'monitor'));
@@ -71,14 +101,14 @@ const Monitor = () => {
     setTempRemark('');
   };
 
-  const toggleReviewedStatus = (id, currentStatus,addedBy) => {
-    if(addedBy!==0 && addedBy!==hrNumber){
+  const toggleReviewedStatus = (id, currentStatus, addedBy) => {
+    if (addedBy !== 0 && addedBy !== hrNumber) {
       enqueueSnackbar("You're not authorized to change this status", { variant: 'error' });
-      return ;
+      return;
     }
-    else if(currentStatus==='followed_up'){
+    if (currentStatus === 'followed_up') {
       enqueueSnackbar("You can't change the status after remark", { variant: 'warning' });
-      return ;
+      return;
     }
     const newStatus = currentStatus === 'reviewed' ? 'active' : 'reviewed';
     const incharge = currentStatus === 'reviewed' ? 0 : hrNumber;
@@ -93,7 +123,7 @@ const Monitor = () => {
   return (
     <Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap={2} padding={2}>
       {employees.map(emp => {
-        const canAct =emp.addedBy === hrNumber || emp.addedBy=='0';
+        const canAct = emp.addedBy === hrNumber || emp.addedBy === 0;
         const showAddRemarks = canAct && emp.status === 'reviewed';
         const showDelete = canAct && emp.status === 'followed_up';
 
@@ -102,17 +132,17 @@ const Monitor = () => {
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
               <Typography variant="h6">{emp.Name} ({emp.EmployeeNumber})</Typography>
               <Button
-                  onClick={() => toggleReviewedStatus(emp.id, emp.status,emp.addedBy)}
-                  style={{
-                    minWidth: 16,
-                    height: 16,
-                    borderRadius: '50%',
-                    padding: 0,
-                    backgroundColor: getStatusColor(emp.status || 'active'),
-                    border: '1px solid #ccc'
-                  }}
-                  title={emp.status || 'active'}
-                />
+                onClick={() => toggleReviewedStatus(emp.id, emp.status, emp.addedBy)}
+                style={{
+                  minWidth: 16,
+                  height: 16,
+                  borderRadius: '50%',
+                  padding: 0,
+                  backgroundColor: getStatusColor(emp.status || 'active'),
+                  border: '1px solid #ccc'
+                }}
+                title={emp.status || 'active'}
+              />
             </Box>
 
             <Typography>Risk Score: {emp.RiskScore}</Typography>

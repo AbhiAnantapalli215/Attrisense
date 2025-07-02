@@ -1,6 +1,5 @@
 # Node dependencies
 node_modules/
-functions/node_modules/
 app/node_modules/
 
 # Vite build output

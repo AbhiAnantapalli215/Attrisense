@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useSnackbar } from "notistack";
+import { useNavigate } from 'react-router-dom';
 
 export default function Profile({ employee, employeeId }) {
   const [profile, setProfile] = useState(employee);
@@ -68,8 +69,12 @@ export default function Profile({ employee, employeeId }) {
     "StockOptionLevel",
     "OverTime"
   ];
-
+  const navigate = useNavigate();
+  const goBackToDetails = () => {
+    navigate('/list'); // or replace with your actual path
+  };
   return (
+    <>
     <div className="profile-container">
       {isAttritionYes && <div className="left-stamp">LEFT</div>}
       <div className="profile-header">
@@ -162,6 +167,13 @@ export default function Profile({ employee, employeeId }) {
         )}
       </div>
        )}
+      
     </div>
+     <div className="back-button-container">
+        <button onClick={goBackToDetails} className="back-button">
+          ← Back to Details
+        </button>
+      </div>
+    </>
   );
 }

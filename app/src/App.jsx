@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { auth } from './firebase';
 
 import { onAuthStateChanged } from 'firebase/auth';
@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard';
 import EmployeeList from './pages/EmployeeList';
 import Monitor from './pages/Monitor';
 import ProfilePage from './pages/ProfilePage';
+import UserDashboard from './pages/UserDashboard';
 
 
 // Protected Route Component
@@ -33,7 +34,7 @@ function App() {
 
   if (loading) return <div>Loading...</div>;
   return (
-    <BrowserRouter>
+    <>
       <Header />
       <Routes>
         {/* Public Routes */}
@@ -60,6 +61,15 @@ function App() {
         />
         {/* Protected Route */}
         <Route 
+          path="/dashboard/:id" 
+          element={
+            <ProtectedRoute>
+              <UserDashboard />
+            </ProtectedRoute>
+          }
+        />
+        {/* Protected Route */}
+        <Route 
           path="/list" 
           element={
             <ProtectedRoute>
@@ -80,7 +90,7 @@ function App() {
         {/* Redirects */}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }
 

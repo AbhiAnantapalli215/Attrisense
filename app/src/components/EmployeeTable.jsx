@@ -1,6 +1,7 @@
 // components/EmployeeTable.js
 import PropTypes from 'prop-types';
 import { FiEye, FiPlus, FiUser } from 'react-icons/fi';
+import { useNavigate } from "react-router-dom";
 
 const departmentMap = {
   'Sales': { display: 'Sales', class: 'sales' },
@@ -48,7 +49,8 @@ EmployeeTable.propTypes = {
   onSelectProfile: PropTypes.func.isRequired
 };
 
-function EmployeeRow({ employee, addToMonitor, onSelectProfile }) {
+function EmployeeRow({ employee, addToMonitor}) {
+  const navigate = useNavigate();
   const dept = departmentMap[employee.Department] || {
     display: employee.Department,
     class: employee.Department?.toLowerCase().replace(/[^a-z0-9]/g, '-'),
@@ -71,8 +73,8 @@ function EmployeeRow({ employee, addToMonitor, onSelectProfile }) {
       </td>
       <td className="emp-actions">
         <div className="emp-dash">
-          <ActionButton icon={<FiUser />} label="Profile" onClick={() => window.location.href=`/profile/${employee.id}`}/>
-          <ActionButton icon={<FiEye />} label="View" onClick={() => window.location.href = `/dashboard/${employee.id}`} />
+          <ActionButton icon={<FiUser />} label="Profile" onClick={() => navigate(`/profile/${employee.id}`)}/>
+          <ActionButton icon={<FiEye />} label="View" onClick={() => navigate(`/dashboard/${employee.id}`)}/>
           <ActionButton icon={<FiPlus />} label="Add" onClick={() => addToMonitor(employee.id)} />
         </div>
       </td>
@@ -83,7 +85,6 @@ function EmployeeRow({ employee, addToMonitor, onSelectProfile }) {
 EmployeeRow.propTypes = {
   employee: PropTypes.object.isRequired,
   addToMonitor: PropTypes.func.isRequired,
-  onSelectProfile: PropTypes.func.isRequired
 };
 
 

@@ -10,8 +10,9 @@ import {
   doc,
   setDoc
 } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db,auth } from '../firebase';
 import { useSnackbar } from 'notistack';
+import { getDoc } from 'firebase/firestore';
 
 export function useEmployees() {
   const [employees, setEmployees] = useState([]);
@@ -123,11 +124,30 @@ export function useEmployees() {
       enqueueSnackbar('Employee data not found.', { variant: 'error' });
       return;
     }
-
+    if (employee.Attrition === "Yes") {
+      enqueueSnackbar('Employee already left the Company.', { variant: 'error' });
+      return;
+    }
+    const userDc = await getDoc(doc(db, 'monitor', String(employee.EmployeeNumber)));
+    if (userDc.exists()) {
+      enqueueSnackbar('Employee is already under monitoring.', { variant: 'info' });
+      return;
+    }
     try {
-      const now = new Date().toISOString(); // Current timestamp
-      const addedBy = localStorage.getItem('employeeNumber') || '0';
+      const now = new Date().toISOString();
 
+      // ✅ Get current user’s uid
+      const user = auth.currentUser;
+      let addedBy = '0'; // fallback if user not found
+
+      if (user) {
+        // Fetch their userData document
+        const userDoc = await getDoc(doc(db, 'userData', user.uid));
+        if (userDoc.exists()) {
+          addedBy = userDoc.data().EmployeeNumber || '0';
+        }
+      }
+      addedBy=parseInt(addedBy,10);
       const monitorData = {
         EmployeeNumber: employee.EmployeeNumber,
         Name: employee.Name,
@@ -148,6 +168,7 @@ export function useEmployees() {
       enqueueSnackbar('Failed to add employee to monitor.', { variant: 'error' });
     }
   };
+
 
   useEffect(() => {
     if (!searchMode) {
