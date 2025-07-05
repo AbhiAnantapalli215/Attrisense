@@ -10,7 +10,7 @@ import {
   doc,
   setDoc
 } from 'firebase/firestore';
-import { db,auth } from '../firebase';
+import { db, auth } from '../firebase';
 import { useSnackbar } from 'notistack';
 import { getDoc } from 'firebase/firestore';
 
@@ -24,6 +24,16 @@ export function useEmployees() {
   const [hasMore, setHasMore] = useState(true);
 
   const { enqueueSnackbar } = useSnackbar();
+
+  // ✅ Helper: Capitalize each word's first letter
+  const capitalizeWords = (term) => {
+    return term
+      .trim()
+      .split(' ')
+      .filter(Boolean)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };
 
   const fetchEmployees = async (pageDirection = 0) => {
     if (loading) return;
@@ -78,13 +88,19 @@ export function useEmployees() {
     try {
       let q;
       if (/^\d+$/.test(searchTerm)) {
-        q = query(collection(db, 'employeelist'), where('EmployeeNumber', '==', parseInt(searchTerm.trim())));
+        q = query(
+          collection(db, 'employeelist'),
+          where('EmployeeNumber', '==', parseInt(searchTerm.trim()))
+        );
       } else {
+        // ✅ Format multi-word name with first letter capitalized for each word
+        const formattedTerm = capitalizeWords(searchTerm);
+
         q = query(
           collection(db, 'employeelist'),
           orderBy('Name'),
-          where('Name', '>=', searchTerm.trim()),
-          where('Name', '<=', searchTerm.trim() + '\uf8ff'),
+          where('Name', '>=', formattedTerm),
+          where('Name', '<=', formattedTerm + '\uf8ff'),
           limit(15)
         );
       }
@@ -136,18 +152,17 @@ export function useEmployees() {
     try {
       const now = new Date().toISOString();
 
-      // ✅ Get current user’s uid
       const user = auth.currentUser;
-      let addedBy = '0'; // fallback if user not found
+      let addedBy = '0';
 
       if (user) {
-        // Fetch their userData document
         const userDoc = await getDoc(doc(db, 'userData', user.uid));
         if (userDoc.exists()) {
           addedBy = userDoc.data().EmployeeNumber || '0';
         }
       }
-      addedBy=parseInt(addedBy,10);
+      addedBy = parseInt(addedBy, 10);
+
       const monitorData = {
         EmployeeNumber: employee.EmployeeNumber,
         Name: employee.Name,
@@ -169,7 +184,6 @@ export function useEmployees() {
     }
   };
 
-
   useEffect(() => {
     if (!searchMode) {
       fetchEmployees(0);
@@ -189,6 +203,6 @@ export function useEmployees() {
     handleNextPage,
     handlePrevPage,
     canGoBack: currentPage > 0,
-    addToMonitor // ✅ make sure this is returned!
+    addToMonitor
   };
 }

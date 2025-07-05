@@ -5,70 +5,86 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  Legend,
   ResponsiveContainer,
-  Label // ✅ You need this!
+  Label,
+  CartesianGrid,
 } from "recharts";
 
 export default function AttritionByMonth({ data }) {
   const years = Object.keys(data);
-  const [selectedYear, setSelectedYear] = useState(null);
-
-  const handleLegendClick = (e) => {
-    const { dataKey } = e;
-    if (selectedYear === dataKey) {
-      // If clicked again, show all years
-      setSelectedYear(null);
-    } else {
-      setSelectedYear(dataKey);
-    }
-  };
+  const [selectedYear, setSelectedYear] = useState("All Years");
 
   const months = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   ];
 
-  // Format data for recharts
-  const chartData = months.map((month) => {
-    const row = { month };
-    years.forEach((year) => {
-      row[year] = data[year][month] || 0;
-    });
-    return row;
+  // ✅ Prepare data for "All Years"
+  const totalPerYear = years.map((year) => {
+    const total = months.reduce(
+      (sum, month) => sum + (data[year][month] || 0),
+      0
+    );
+    return { year, total };
   });
+
+  // ✅ Prepare data for selected year
+  const chartData = selectedYear !== "All Years"
+    ? months.map((month) => ({
+        month,
+        attrition: data[selectedYear][month] || 0,
+      }))
+    : totalPerYear;
 
   return (
     <div className="chart-container1">
-      <h3>Attrition by Month</h3>
+      <h3>Attrition by {selectedYear === "All Years" ? "Year" : "Month"}</h3>
+
+      <select
+        value={selectedYear}
+        onChange={(e) => setSelectedYear(e.target.value)}
+        style={{ marginBottom: "1rem" }}
+      >
+        <option value="All Years">All Years</option>
+        {years.map((year) => (
+          <option key={year} value={year}>{year}</option>
+        ))}
+      </select>
+
       <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={chartData}>
-          <XAxis dataKey="month" />
+        <LineChart
+          data={chartData}
+          margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey={selectedYear === "All Years" ? "year" : "month"}
+            interval={0}
+            tick={{ fontSize: 12 }}
+          >
+            <Label
+              value={selectedYear === "All Years" ? "Year" : "Month"}
+              offset={-35}
+              position="insideBottom"
+              style={{ fontWeight: "bold" }}
+            />
+          </XAxis>
           <YAxis>
-             <Label
-                value="No. of Employees Left"
-                angle={-90}
-                position="insideLeft"
-                style={{ textAnchor: "middle", fontWeight: "bold" }}
-              />
+            <Label
+              value={selectedYear === "All Years" ? "Total Employees Left" : "No. of Employees Left"}
+              angle={-90}
+              position="insideLeft"
+              style={{ textAnchor: "middle", fontWeight: "bold" }}
+            />
           </YAxis>
           <Tooltip />
-          <Legend onClick={handleLegendClick} />
-          {years.map((year) => {
-            const isVisible = !selectedYear || selectedYear === year;
-            return (
-              <Line
-                key={year}
-                type="monotone"
-                dataKey={year}
-                stroke={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
-                strokeWidth={2}
-                opacity={isVisible ? 1 : 0}
-                hide={!isVisible}
-                dot={{ r: 4 }}
-              />
-            );
-          })}
+          <Line
+            type="monotone"
+            dataKey={selectedYear === "All Years" ? "total" : "attrition"}
+            stroke="#8884d8"
+            strokeWidth={2}
+            dot={{ r: 4 }}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>

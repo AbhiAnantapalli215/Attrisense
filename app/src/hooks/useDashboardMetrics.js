@@ -14,24 +14,33 @@ export default function useDashboardMetrics() {
     },
     attritionByDepartment: {},
     attritionByJobRole: {},
-    attritionByManagerDept: {},
+    attritionByManagerDept: {}, // ✅ updated structure (same key)
     attritionByMonth: {},
     averageSalaryByJobRole: {},
+    averageSalaryByDepartment: {},      // ✅ NEW
+    averageSalaryByEducation: {},       // ✅ NEW
+    averageTrainingByDepartment: {},    // ✅ NEW
     genderBreakdown: {},
+    updatedAt: null,                    // ✅ helpful for showing last update
   });
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMetrics = async () => {
       const docRef = doc(db, "dashboardMetrics", "main");
       const docSnap = await getDoc(docRef);
+
       if (docSnap.exists()) {
         setMetrics(docSnap.data());
       }
+
       setLoading(false);
     };
+
     fetchMetrics();
   }, []);
 
   return { metrics, loading };
 }
+  

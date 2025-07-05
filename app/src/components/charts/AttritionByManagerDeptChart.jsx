@@ -7,7 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
-  Label, // ✅ Make sure you import Label too!
+  Label,
 } from "recharts";
 
 export default function AttritionByManagerDeptChart({ data }) {
@@ -16,17 +16,19 @@ export default function AttritionByManagerDeptChart({ data }) {
 
   if (!selectedDept) return <div>No data available</div>;
 
-  // Prepare chart data
+  // ✅ Prepare chart data with attritionRate, attritionCount, totalReports
   const chartData = Object.entries(data[selectedDept]).map(
-    ([managerId, count]) => ({
-      managerId,
-      attrition: count,
+    ([managerId, mgrData]) => ({
+      ManagerID: `MGR${managerId.toString().padStart(4, "0")}`,
+      attritionRate: mgrData.attritionRate,          // % for bar height
+      attritionCount: mgrData.attritionCount,        // absolute #
+      totalReports: mgrData.totalReports,            // absolute #
     })
   );
 
   return (
     <div className="chart-container2">
-      <h3>Attrition by Manager ID & Department</h3>
+      <h3>Attrition Rate by Manager ID & Department</h3>
 
       <select
         onChange={(e) => setSelectedDept(e.target.value)}
@@ -46,19 +48,49 @@ export default function AttritionByManagerDeptChart({ data }) {
             margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="managerId" angle={-45} textAnchor="end" interval={0}>
-              <Label value="Manager ID" offset={-35} position="insideBottom" style={{ fontWeight: 'bold' }}/>
-            </XAxis>
-            <YAxis>
+            <XAxis
+              dataKey="ManagerID"
+              angle={-45}
+              textAnchor="end"
+              interval={0}
+              tick={{ fontSize: 11 }}
+            >
               <Label
-                value="No. of employee left"
+                value="Manager ID"
+                offset={-35}
+                position="insideBottom"
+                style={{ fontWeight: "bold" }}
+              />
+            </XAxis>
+            <YAxis
+              domain={[0, 100]}
+              tickFormatter={(tick) => `${tick}%`}
+            >
+              <Label
+                value="Attrition Rate (%)"
                 angle={-90}
                 position="insideLeft"
-                style={{ textAnchor: "middle",fontWeight: 'bold' }}
+                style={{ textAnchor: "middle", fontWeight: "bold" }}
               />
             </YAxis>
-            <Tooltip />
-            <Bar dataKey="attrition" fill="#82ca9d" />
+            <Tooltip
+              formatter={(value, name, props) => {
+                const { payload } = props; // Get full data point
+                if (name === "Attrition Rate") {
+                  return [
+                    `${payload.attritionCount} left / ${payload.totalReports} total = ${value.toFixed(2)}%`,
+                    "Attrition",
+                  ];
+                }
+                return [value, name];
+              }}
+              labelFormatter={(label) => `ManagerID: ${label}`}
+            />
+            <Bar
+              dataKey="attritionRate"
+              fill="#82ca9d"
+              name="Attrition Rate"
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>

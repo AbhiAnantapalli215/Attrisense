@@ -16,7 +16,7 @@ const AvgsalbyJobRole = ({ data }) => {
     labels,
     datasets: [
       {
-        label: "Average Salary by Job Role",
+        label: "Monthly Income",
         data: values,
         backgroundColor: "#1cc88a",
       },
@@ -34,7 +34,7 @@ const AvgsalbyJobRole = ({ data }) => {
       x: {
         title: {
           display: true,
-          text: "Salary",
+          text: "Salary (in $)",
           font: {
             weight: 'bold',
             size: 14,
@@ -46,7 +46,7 @@ const AvgsalbyJobRole = ({ data }) => {
 
   return (
     <div className="chart-container1">
-      <h3>Average Salary by Job Role</h3>
+      <h3>Average Monthly Income by Job Role</h3>
       <Bar data={chartData} options={options} />
     </div>
   );

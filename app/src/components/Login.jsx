@@ -2,10 +2,12 @@ import { useState } from "react";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 export default function Login() {
   const [employeeId, setEmployeeId] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // 👈 new
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -33,19 +35,31 @@ export default function Login() {
           <p className="side-title">Employee ID</p>
           <input
             type="text"
-            placeholder="Enter your id"
+            placeholder="Enter your ID"
             value={employeeId}
             onChange={(e) => setEmployeeId(e.target.value)}
             required
           />
           <p className="side-title">Password</p>
-          <input
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="password-wrapper">
+            <div className="password-input">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div className="toggle-password">
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FiEye /> : <FiEyeOff />}
+              </button>
+            </div>
+          </div>
 
           <div className="log-in">
             <button type="submit">Login</button>
@@ -55,6 +69,7 @@ export default function Login() {
           New user? <a href="/signup">Sign up</a>
         </p>
       </div>
+
       <div className="white-conatainer">
         <p className="demo-text">Came for demo? Use this</p>
         <div className="demo-section">
@@ -79,7 +94,6 @@ export default function Login() {
           </button>
         </div>
       </div>
-
     </div>
   );
 }

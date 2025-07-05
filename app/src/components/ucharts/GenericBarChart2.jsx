@@ -22,7 +22,7 @@ export default function GenericBarChart2({ data, xKey, yKey, title }) {
   return (
     <div className="chart-container5">
       <h3>{title}</h3>
-      <ResponsiveContainer height={230} width={290} style={{ marginTop: '2rem' }}>
+      <ResponsiveContainer height={180} width={290} style={{ marginTop: '2rem' }}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey={xKey} />

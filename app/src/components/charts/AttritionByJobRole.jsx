@@ -17,7 +17,7 @@ const AttritionByJobRole = ({ data }) => {
     labels,
     datasets: [
       {
-        label: "Attrition by Job Role",
+        label: "No. of people left",
         data: values,
         backgroundColor: "#4e73df",
       },

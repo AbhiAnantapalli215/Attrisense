@@ -1,24 +1,39 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Main employee data - for listing and dashboards
+
+    // ✅ Helper function to check if user is a Manager
+    function isManager() {
+      return get(/databases/$(database)/documents/userData/$(request.auth.uid)).data.JobRole == "Manager";
+    }
+
+    // ✅ Users can read/write only their own userData doc
+    match /userData/{userId} {
+      allow read, update, delete: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // ✅ employeelist: anyone logged in can read/write
     match /employeelist/{employeeId} {
-      allow read: if request.auth != null;  // Authenticated users can read
-      allow write: if false;               
+      allow read, write: if request.auth != null;
     }
-    
-    //Monitor - for at-risk employees
+
+    // ✅ monitor: anyone logged in can do all actions
     match /monitor/{employeeId} {
-      allow read, write, create, update, delete: if request.auth != null; 
-      //Authenticated users can perform all opertaions
+      allow read, write, create, update, delete: if request.auth != null;
     }
 
-    // Whitelist - for signup validation
+    // ✅ dashboardMetrics: only Managers can update
+    match /dashboardMetrics/{docId} {
+      allow read: if request.auth != null;
+      allow update: if request.auth != null && isManager();
+    }
+
+    // ✅ Whitelist: allow GET for signup, deny list & write
     match /whitelist/{employeeId} {
-      allow get: if true;    // Allow unauthenticated GET for signup validation
-      allow list: if false;  // Prevent listing the whole whitelist
-      allow write: if false; // No public writes
+      allow get: if true;
+      allow list: if false;
+      allow write: if false;
     }
-
   }
 }

@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import { FiEye, FiPlus, FiUser } from 'react-icons/fi';
 import { useNavigate } from "react-router-dom";
 
+// Department display map
 const departmentMap = {
   'Sales': { display: 'Sales', class: 'sales' },
   'Research & Development': { display: 'R&D', class: 'r-d' },
   'Human Resources': { display: 'HR', class: 'hr' },
 };
+
+// Role display map
 const roleMap = {
   'Healthcare Representative': { display: 'Healthcare Rep', class: 'healthcare-rep' },
   'Human Resources': { display: 'HR', class: 'human-resources' },
@@ -19,6 +22,12 @@ const roleMap = {
   'Sales Executive': { display: 'Sales Exec', class: 'sales-executive' },
   'Sales Representative': { display: 'Sales Rep', class: 'sales-rep' },
 };
+
+// Helper function to format employee ID
+function formatEmployeeId(id) {
+  const padded = String(id).padStart(4, '0'); // always at least 4 digits
+  return `EMP${padded}`;
+}
 
 export function EmployeeTable({ employees, addToMonitor, onSelectProfile }) {
   return (
@@ -35,7 +44,12 @@ export function EmployeeTable({ employees, addToMonitor, onSelectProfile }) {
         </thead>
         <tbody>
           {employees.map((employee) => (
-            <EmployeeRow key={employee.id} employee={employee} addToMonitor={addToMonitor} onSelectProfile={onSelectProfile}/>
+            <EmployeeRow
+              key={employee.id}
+              employee={employee}
+              addToMonitor={addToMonitor}
+              onSelectProfile={onSelectProfile}
+            />
           ))}
         </tbody>
       </table>
@@ -46,11 +60,12 @@ export function EmployeeTable({ employees, addToMonitor, onSelectProfile }) {
 EmployeeTable.propTypes = {
   employees: PropTypes.array.isRequired,
   addToMonitor: PropTypes.func.isRequired,
-  onSelectProfile: PropTypes.func.isRequired
+  onSelectProfile: PropTypes.func.isRequired,
 };
 
-function EmployeeRow({ employee, addToMonitor}) {
+function EmployeeRow({ employee, addToMonitor }) {
   const navigate = useNavigate();
+
   const dept = departmentMap[employee.Department] || {
     display: employee.Department,
     class: employee.Department?.toLowerCase().replace(/[^a-z0-9]/g, '-'),
@@ -64,7 +79,7 @@ function EmployeeRow({ employee, addToMonitor}) {
   return (
     <tr>
       <td className="emp-name">{employee.Name}</td>
-      <td className="emp-id">{employee.id}</td>
+      <td className="emp-id">{formatEmployeeId(employee.id)}</td>
       <td className="emp-dept">
         <span className={`dept-label ${dept.class}`}>{dept.display}</span>
       </td>
@@ -73,9 +88,24 @@ function EmployeeRow({ employee, addToMonitor}) {
       </td>
       <td className="emp-actions">
         <div className="emp-dash">
-          <ActionButton icon={<FiUser />} label="Profile" onClick={() => navigate(`/profile/${employee.id}`)}/>
-          <ActionButton icon={<FiEye />} label="View" onClick={() => navigate(`/dashboard/${employee.id}`)}/>
-          <ActionButton icon={<FiPlus />} label="Add" onClick={() => addToMonitor(employee.id)} />
+          <ActionButton
+            icon={<FiUser />}
+            label="Profile"
+            title="View Employee's Profile"
+            onClick={() => navigate(`/profile/${employee.id}`)}
+          />
+          <ActionButton
+            icon={<FiEye />}
+            label="View"
+            title="View Employee's Dashboard"
+            onClick={() => navigate(`/dashboard/${employee.id}`)}
+          />
+          <ActionButton
+            icon={<FiPlus />}
+            label="Add"
+            title="Add Employee to Monitor"
+            onClick={() => addToMonitor(employee.id)}
+          />
         </div>
       </td>
     </tr>
@@ -87,10 +117,9 @@ EmployeeRow.propTypes = {
   addToMonitor: PropTypes.func.isRequired,
 };
 
-
-function ActionButton({ icon, label, onClick }) {
+function ActionButton({ icon, label, title, onClick }) {
   return (
-    <button type="button" onClick={onClick}>
+    <button type="button" onClick={onClick} title={title}>
       <div className="icon-wrapper">
         {icon}
         <span className="icon-label">{label}</span>
@@ -102,5 +131,6 @@ function ActionButton({ icon, label, onClick }) {
 ActionButton.propTypes = {
   icon: PropTypes.element.isRequired,
   label: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired
+  title: PropTypes.string, // tooltip
+  onClick: PropTypes.func.isRequired,
 };

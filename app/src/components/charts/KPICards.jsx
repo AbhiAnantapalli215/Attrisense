@@ -24,7 +24,7 @@ export default function KPICards({ data }) {
       value: `${data.avgYearsSinceLastPromotion?.toFixed(1) || 0} yrs`,
       isNegative: data.avgYearsSinceLastPromotion < 2, // Example threshold
       icon:  data.avgYearsSinceLastPromotion < 2 ? <TrendingDown color="red"/>:<TrendingUp color="blue" />,
-      description: "Average time since last promotion."
+      description: "Average time for promotion."
     },
     {
       label: "Avg Satisfaction",

@@ -30,16 +30,50 @@ export async function updateDashboardMetrics() {
     });
 
     // ------------------------------
-    // Attrition by ManagerID + Department
+    // ✅ UPDATED: Attrition by ManagerID + Department (with totals & attrition %)
     const attritionByManagerDept = {};
+
+    // Total reports per ManagerID + Department
+    const totalReportsByManagerDept = {};
+    employees.forEach(emp => {
+      const dept = emp.Department;
+      const mgrId = emp.ManagerID?.toString() || "Unknown";
+
+      if (!totalReportsByManagerDept[dept]) {
+        totalReportsByManagerDept[dept] = {};
+      }
+      totalReportsByManagerDept[dept][mgrId] = (totalReportsByManagerDept[dept][mgrId] || 0) + 1;
+    });
+
+    // Attrition counts per ManagerID + Department
+    const attritionCountsByManagerDept = {};
     attritionEmployees.forEach(emp => {
       const dept = emp.Department;
       const mgrId = emp.ManagerID?.toString() || "Unknown";
 
-      if (!attritionByManagerDept[dept]) {
-        attritionByManagerDept[dept] = {};
+      if (!attritionCountsByManagerDept[dept]) {
+        attritionCountsByManagerDept[dept] = {};
       }
-      attritionByManagerDept[dept][mgrId] = (attritionByManagerDept[dept][mgrId] || 0) + 1;
+      attritionCountsByManagerDept[dept][mgrId] = (attritionCountsByManagerDept[dept][mgrId] || 0) + 1;
+    });
+
+    // Merge into final structure
+    Object.keys(totalReportsByManagerDept).forEach(dept => {
+      attritionByManagerDept[dept] = {};
+
+      Object.keys(totalReportsByManagerDept[dept]).forEach(mgrId => {
+        const totalReports = totalReportsByManagerDept[dept][mgrId];
+        const attritionCount = attritionCountsByManagerDept[dept]?.[mgrId] || 0;
+        const attritionRate = totalReports > 0
+          ? parseFloat(((attritionCount / totalReports) * 100).toFixed(2))
+          : 0;
+
+        attritionByManagerDept[dept][mgrId] = {
+          totalReports,
+          attritionCount,
+          attritionRate
+        };
+      });
     });
 
     // ------------------------------
@@ -188,12 +222,12 @@ export async function updateDashboardMetrics() {
       },
       attritionByDepartment,
       attritionByJobRole,
-      attritionByManagerDept,
+      attritionByManagerDept,        // ✅ UPDATED
       attritionByMonth,
       averageSalaryByJobRole,
-      averageSalaryByDepartment,       // ✅ NEW
-      averageSalaryByEducation,        // ✅ NEW
-      averageTrainingByDepartment,     // ✅ NEW
+      averageSalaryByDepartment,     // ✅ NEW
+      averageSalaryByEducation,      // ✅ NEW
+      averageTrainingByDepartment,   // ✅ NEW
       genderBreakdown,
       updatedAt: now
     };

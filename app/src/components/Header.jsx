@@ -1,21 +1,32 @@
+import { useState } from 'react'; // ✅ Add useState
 import logo from '../assets/logo.png';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
-import { useLocation,useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 
 const Header = () => {
   const location = useLocation();
-  const isAuthPage = ['/login', '/signup'].includes(location.pathname);
-  
   const navigate = useNavigate();
+  const isAuthPage = ['/login', '/signup'].includes(location.pathname);
+  const [menuOpen, setMenuOpen] = useState(false); // ✅ new state for mobile menu
+
   const handleLogout = async () => {
-    await signOut(auth);
-    navigate('/login');
+    const confirmLogout = window.confirm("Do you want to logout?");
+    if (confirmLogout) {
+      await signOut(auth);
+      navigate('/login');
+    }
+  };
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
+  const closeMenu = () => {
+    setMenuOpen(false);
   };
 
   if (isAuthPage) {
-    // Header for login/signup pages (simplified version)
     return (
       <header className="auth-header">
         <div className="header-left">
@@ -25,36 +36,58 @@ const Header = () => {
     );
   }
 
-  // Default header for other pages
+  const isActive = (path) => location.pathname === path;
+
   return (
     <header className="app-header">
-      <div className="header-left">
-        <img src={logo} alt="App Logo" className="logo" />
-      </div>
+      <Link to="/dashboard" onClick={closeMenu}>
+        <div className="header-left">
+          <img src={logo} alt="App Logo" className="logo" />
+        </div>
+      </Link>
 
-      <div className="header-right">
-        <Link to="/dashboard">
-          <button className="header-button dashboard-button">
+      <button
+        className="menu-toggle"
+        aria-label="Toggle Menu"
+        onClick={toggleMenu}
+      >
+        &#9776; {/* Hamburger icon */}
+      </button>
+
+      <div className={`header-right ${menuOpen ? 'open' : ''}`}>
+        <Link to="/dashboard" onClick={closeMenu}>
+          <button
+            className={`header-button dashboard-button ${isActive('/dashboard') ? 'active' : ''}`}
+          >
             Dashboard
           </button>
         </Link>
-        <Link to="/list">
-          <button className="header-button list-button">
+
+        <Link to="/list" onClick={closeMenu}>
+          <button
+            className={`header-button list-button ${isActive('/list') ? 'active' : ''}`}
+          >
             List
           </button>
         </Link>
-        <Link to="/monitor">
-          <button className="header-button danger-button">
+
+        <Link to="/monitor" onClick={closeMenu}>
+          <button
+            className={`header-button danger-button monitor-button ${isActive('/monitor') ? 'active' : ''}`}
+          >
             Monitor
           </button>
         </Link>
-        <button 
+
+        <button
           className="header-button logout-button"
-          onClick={handleLogout}
+          onClick={() => {
+            handleLogout();
+            closeMenu();
+          }}
         >
           Logout
         </button>
-        
       </div>
     </header>
   );

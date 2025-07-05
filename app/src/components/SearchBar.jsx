@@ -16,10 +16,9 @@ export function SearchBar({
         onChange={(e) => setSearchTerm(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
       />
-      <button onClick={handleSearch}>Search</button>
       {searchMode && (
         <button onClick={resetSearch} className="reset-btn">
-          Show All
+          Reset
         </button>
       )}
     </div>

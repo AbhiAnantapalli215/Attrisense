@@ -3,17 +3,20 @@ import { auth, db } from "../firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { FiEye, FiEyeOff } from "react-icons/fi"; // ✅ Add this!
 
 export default function Signup() {
   const [employeeId, setEmployeeId] = useState("");
-  const [role, setRole] = useState(""); // NEW: role state
+  const [role, setRole] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // ✅ NEW
   const [phase, setPhase] = useState(1);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Phase 1: Check if Employee ID is whitelisted and role matches
   const checkEmployeeId = async (e) => {
     e.preventDefault();
     try {
@@ -37,7 +40,6 @@ export default function Signup() {
     }
   };
 
-  // Phase 2: Create account + store UID mapping
   const handleSignup = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -46,7 +48,6 @@ export default function Signup() {
     }
 
     try {
-      // Use empID as dummy email
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         `${employeeId}@company.com`,
@@ -55,9 +56,8 @@ export default function Signup() {
 
       const uid = userCredential.user.uid;
 
-      // Create userData doc with UID as ID
       await setDoc(doc(db, "userData", uid), {
-        EmployeeNumber: parseInt(employeeId,10),
+        EmployeeNumber: parseInt(employeeId, 10),
         JobRole: role,
       });
 
@@ -102,25 +102,53 @@ export default function Signup() {
             </div>
 
             <button type="submit">Check Details</button>
+            <p className="bg-text">
+              Already have an account?? <a href="/login">Sign in</a>
+            </p>
           </form>
-
         ) : (
           <form onSubmit={handleSignup}>
             <p className="side-title">Password</p>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <input
-              type="password"
-              placeholder="Re-enter Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
+            <div className="password-wrapper">
+              <div className="password-input">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="toggle-password">
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FiEye /> : <FiEyeOff />}
+                </button>
+              </div>
+            </div>
+
+            <div className="password-wrapper">
+              <div className="password-input">
+                <input
+                  type={showConfirmPassword ? "text" : "password"} // ✅ Use separate toggle
+                  placeholder="Re-enter your password"
+                  value={confirmPassword} // ✅ Use confirmPassword state
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="toggle-password">
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <FiEye /> : <FiEyeOff />}
+                </button>
+              </div>
+            </div>
+
             <button type="submit">Sign Up</button>
           </form>
         )}

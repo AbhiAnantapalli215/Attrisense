@@ -36,7 +36,7 @@ export default function GenericBarChart({ data, xKey, yKey, title }) {
           </XAxis>
           <YAxis>
             <Label
-              value="Salary"
+              value="Salary ($)"
               angle={-90}
               position="insideLeft"
               style={{ textAnchor: "middle", fontWeight: "bold" }}
