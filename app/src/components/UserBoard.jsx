@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useSearchParams } from 'react-router-dom';
 import useDashboardMetrics from "../hooks/useDashboardMetrics.js";
 
 import GenericBarChart from "../components/ucharts/GenericBarChart";
@@ -10,13 +10,14 @@ import { FaUserTie } from 'react-icons/fa';
 
 export default function UserBoard({ employee, employeeId }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { metrics, loading } = useDashboardMetrics();
 
   if (loading) return <div>Loading...</div>;
   if (!metrics || !employee) return <div>No data available</div>;
 
   const goBackToDetails = () => {
-    navigate('/list');
+    navigate(`/list?${searchParams.toString()}`);
   };
 
   // ✅ Combined Salary Comparison

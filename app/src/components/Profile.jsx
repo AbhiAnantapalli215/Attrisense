@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useSnackbar } from "notistack";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useSearchParams } from 'react-router-dom';
 
 export default function Profile({ employee, employeeId }) {
+  const [searchParams] = useSearchParams();
   const [profile, setProfile] = useState(employee);
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
@@ -81,7 +82,7 @@ export default function Profile({ employee, employeeId }) {
   };
 
   const goBackToDetails = () => {
-    navigate('/list'); // Adjust path as needed
+    navigate(`/list?${searchParams.toString()}`);
   };
 
   return (

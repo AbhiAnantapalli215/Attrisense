@@ -1,7 +1,24 @@
 // components/EmployeeTable.js
 import PropTypes from 'prop-types';
 import { FiEye, FiPlus, FiUser } from 'react-icons/fi';
-import { useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+
+export default function ListPage() {
+  const [searchParams] = useSearchParams();
+
+  return (
+    <div>
+      {employees.map(emp => (
+        <Link
+          key={emp.id}
+          to={`/profile/${emp.id}?${searchParams.toString()}`}
+        >
+          View Profile
+        </Link>
+      ))}
+    </div>
+  );
+}
 
 // Department display map
 const departmentMap = {
@@ -16,9 +33,9 @@ const roleMap = {
   'Human Resources': { display: 'HR', class: 'human-resources' },
   'Laboratory Technician': { display: 'Lab Tech', class: 'lab-tech' },
   'Manager': { display: 'Manager', class: 'manager' },
-  'Manufacturing Director': { display: 'Manufacturing Dir', class: 'manufacturing-director' },
+  'Manufacturing Director': { display: 'Manufact Dir', class: 'manufacturing-director' },
   'Research Director': { display: 'R&D Director', class: 'research-director' },
-  'Research Scientist': { display: 'Researcher', class: 'research-scientist' },
+  'Research Scientist': { display: 'Res Sci', class: 'research-scientist' },
   'Sales Executive': { display: 'Sales Exec', class: 'sales-executive' },
   'Sales Representative': { display: 'Sales Rep', class: 'sales-rep' },
 };
@@ -65,7 +82,7 @@ EmployeeTable.propTypes = {
 
 function EmployeeRow({ employee, addToMonitor }) {
   const navigate = useNavigate();
-
+  const [searchParams] = useSearchParams();
   const dept = departmentMap[employee.Department] || {
     display: employee.Department,
     class: employee.Department?.toLowerCase().replace(/[^a-z0-9]/g, '-'),
@@ -92,13 +109,13 @@ function EmployeeRow({ employee, addToMonitor }) {
             icon={<FiUser />}
             label="Profile"
             title="View Employee's Profile"
-            onClick={() => navigate(`/profile/${employee.id}`)}
+            onClick={() => navigate(`/profile/${employee.id}?${searchParams.toString()}`)}
           />
           <ActionButton
             icon={<FiEye />}
             label="View"
             title="View Employee's Dashboard"
-            onClick={() => navigate(`/dashboard/${employee.id}`)}
+            onClick={() => navigate(`/dashboard/${employee.id}?${searchParams.toString()}`)}
           />
           <ActionButton
             icon={<FiPlus />}

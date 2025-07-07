@@ -12,9 +12,6 @@ export function PaginationControls({
 
   return (
     <div className='bottom-pit'>
-      <div>
-        {loading && <div className="loading-indicator">Loading...</div>}
-      </div>
       <div className="pagination-controls">
         <button
           onClick={handlePrevPage}
@@ -34,6 +31,9 @@ export function PaginationControls({
           ›
         </button>
 
+      </div>
+      <div>
+        {loading && <div className="loading-indicator">Loading...</div>}
       </div>
     </div>  
   );

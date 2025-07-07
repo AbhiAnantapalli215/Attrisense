@@ -8,11 +8,11 @@ import {
   getDocs,
   where,
   doc,
-  setDoc
+  setDoc,
+  getDoc
 } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { useSnackbar } from 'notistack';
-import { getDoc } from 'firebase/firestore';
 
 export function useEmployees() {
   const [employees, setEmployees] = useState([]);
@@ -23,55 +23,58 @@ export function useEmployees() {
   const [searchMode, setSearchMode] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [selectedJobRole, setSelectedJobRole] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('');
+
   const { enqueueSnackbar } = useSnackbar();
 
-  // ✅ Helper: Capitalize each word's first letter
-  const capitalizeWords = (term) => {
-    return term
+  const capitalizeWords = (term) =>
+    term
       .trim()
       .split(' ')
       .filter(Boolean)
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
       .join(' ');
-  };
 
   const fetchEmployees = async (pageDirection = 0) => {
     if (loading) return;
     setLoading(true);
+
     try {
       let q = query(collection(db, 'employeelist'), orderBy('EmployeeNumber'), limit(15));
 
+      if (selectedDepartment && selectedDepartment !== 'all') {
+        q = query(q, where('Department', '==', selectedDepartment));
+      }
+      if (selectedJobRole && selectedJobRole !== 'all') {
+        q = query(q, where('JobRole', '==', selectedJobRole));
+      }
+      if (selectedStatus && selectedStatus !== 'all') {
+        q = query(q, where('Attrition', '==', selectedStatus));
+      }
+
       if (pageDirection === 1 && lastDocs[currentPage]) {
         q = query(q, startAfter(lastDocs[currentPage]));
-      } else if (pageDirection === -1) {
-        if (currentPage === 1) {
-          q = query(collection(db, 'employeelist'), orderBy('EmployeeNumber'), limit(15));
-        } else if (currentPage > 1) {
-          q = query(q, startAfter(lastDocs[currentPage - 2]));
-        }
+      } else if (pageDirection === -1 && currentPage > 1) {
+        q = query(q, startAfter(lastDocs[currentPage - 2]));
       }
 
       const snapshot = await getDocs(q);
-      const newEmployees = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      setEmployees(newEmployees);
+      setEmployees(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+      setHasMore(snapshot.docs.length === 15);
 
       if (pageDirection === 1) {
-        setLastDocs(prev => [...prev.slice(0, currentPage + 1), snapshot.docs[snapshot.docs.length - 1]]);
-        setCurrentPage(prev => prev + 1);
+        setLastDocs((prev) => [...prev.slice(0, currentPage + 1), snapshot.docs.at(-1)]);
+        setCurrentPage((prev) => prev + 1);
       } else if (pageDirection === -1) {
-        setCurrentPage(prev => prev - 1);
+        setCurrentPage((prev) => prev - 1);
       } else {
-        setLastDocs(snapshot.docs.length > 0 ? [snapshot.docs[snapshot.docs.length - 1]] : []);
+        setLastDocs(snapshot.docs.length > 0 ? [snapshot.docs.at(-1)] : []);
         setCurrentPage(0);
       }
-
-      setHasMore(snapshot.docs.length === 15);
     } catch (err) {
-      console.error('Error fetching employees:', err);
+      console.error('Error:', err);
     } finally {
       setLoading(false);
     }
@@ -85,33 +88,40 @@ export function useEmployees() {
 
     setLoading(true);
     setSearchMode(true);
+
     try {
       let q;
       if (/^\d+$/.test(searchTerm)) {
-        q = query(
-          collection(db, 'employeelist'),
-          where('EmployeeNumber', '==', parseInt(searchTerm.trim()))
-        );
+        q = query(collection(db, 'employeelist'), where('EmployeeNumber', '==', parseInt(searchTerm.trim())));
       } else {
-        // ✅ Format multi-word name with first letter capitalized for each word
-        const formattedTerm = capitalizeWords(searchTerm);
-
+        const formatted = capitalizeWords(searchTerm);
         q = query(
           collection(db, 'employeelist'),
           orderBy('Name'),
-          where('Name', '>=', formattedTerm),
-          where('Name', '<=', formattedTerm + '\uf8ff'),
-          limit(15)
+          where('Name', '>=', formatted),
+          where('Name', '<=', formatted + '\uf8ff')
         );
       }
 
+      if (selectedDepartment && selectedDepartment !== 'all') {
+        q = query(q, where('Department', '==', selectedDepartment));
+      }
+      if (selectedJobRole && selectedJobRole !== 'all') {
+        q = query(q, where('JobRole', '==', selectedJobRole));
+      }
+      if (selectedStatus && selectedStatus !== 'all') {
+        q = query(q, where('Attrition', '==', selectedStatus));
+      }
+
+      q = query(q, limit(15));
+
       const snapshot = await getDocs(q);
-      setEmployees(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setEmployees(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
       setHasMore(false);
       setLastDocs([]);
       setCurrentPage(0);
-    } catch (error) {
-      console.error('Search error:', error);
+    } catch (err) {
+      console.error('Search error:', err);
     } finally {
       setLoading(false);
     }
@@ -120,20 +130,12 @@ export function useEmployees() {
   const resetSearch = () => {
     setSearchTerm('');
     setSearchMode(false);
+    setSelectedDepartment('');
+    setSelectedJobRole('');
+    setSelectedStatus('');
     fetchEmployees(0);
   };
-
-  const handleNextPage = () => {
-    if (!hasMore) return;
-    fetchEmployees(1);
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage <= 0) return;
-    fetchEmployees(-1);
-  };
-
-  // ✅ Function to add employee to "monitor" collection
+  
   const addToMonitor = async (employeeId) => {
     const employee = employees.find(emp => emp.id === employeeId);
     if (!employee) {
@@ -151,7 +153,6 @@ export function useEmployees() {
     }
     try {
       const now = new Date().toISOString();
-
       const user = auth.currentUser;
       let addedBy = '0';
 
@@ -185,24 +186,30 @@ export function useEmployees() {
   };
 
   useEffect(() => {
-    if (!searchMode) {
+    if (searchMode && searchTerm) {
+      handleSearch();
+    } else {
       fetchEmployees(0);
     }
-  }, [searchMode]);
+  }, [searchMode, searchTerm, selectedDepartment, selectedJobRole, selectedStatus]);
 
   return {
     employees,
     loading,
     hasMore,
     searchTerm,
+    setSearchMode,
     searchMode,
     currentPage: currentPage + 1,
     setSearchTerm,
     handleSearch,
     resetSearch,
-    handleNextPage,
-    handlePrevPage,
+    handleNextPage: () => hasMore && fetchEmployees(1),
+    handlePrevPage: () => currentPage > 0 && fetchEmployees(-1),
     canGoBack: currentPage > 0,
-    addToMonitor
+    addToMonitor,
+    setSelectedDepartment,
+    setSelectedJobRole,
+    setSelectedStatus
   };
 }

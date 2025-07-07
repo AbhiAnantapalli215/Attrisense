@@ -335,10 +335,13 @@
   text-align: center;
 }
 
+
 .search-container {
+  position: relative;
   margin: 20px 0;
   display: flex;
-  gap: 10px;
+  align-items: center;
+  flex: 1;
 }
 
 .search-container input {
@@ -349,13 +352,82 @@
   border-radius: 4px;
 }
 
-.search-container button {
+.clear-btn {
+  position: absolute;
+  right: 35px; /* space from input edge */
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #000;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.top-container {
+  display: flex;
+  align-items: center; /* align items vertically in the same line */
+  gap: 20px; /* add space between search, filter, and reset sections */
+}
+
+.search-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.filter-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.reset-container button {
   padding: 8px 16px;
-  background: #4CAF50;
+  background: #f44336; /* red for reset */
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.filter-container select {
+  padding: 8px; /* same as input */
+  font-size: 16px; /* same as input */
+  min-width: 180px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-container svg {
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .top-container{
+    display: flex;
+    flex-direction: column;
+    width: 40vh;
+    gap:0.05rem;
+  }
+  .search-container{
+    display: flex;
+  }
+  .filter-container{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-bottom: 10px;
+  }
 }
 
 .table-responsive {

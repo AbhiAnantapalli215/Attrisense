@@ -125,8 +125,8 @@ const Monitor = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h4" gutterBottom>
+    <Container maxWidth="lg" sx={{ py: 4}}>
+      <Typography variant="h4" sx={{textAlign:'center'}} gutterBottom>
         At-risk Employees
       </Typography>
 
@@ -177,7 +177,7 @@ const Monitor = () => {
                   <Typography variant="body2">Risk Score: {emp.RiskScore}</Typography>
                   <Typography variant="body2">Department: {emp.Department}</Typography>
                   <Typography variant="body2">
-                    Incharge: {emp.addedBy === 0 ? 'model' : emp.addedBy}
+                    Incharge: {emp.addedBy === 0 ? 'system' : emp.addedBy}
                   </Typography>
                   <Typography variant="body2">
                     Added At: {new Date(emp.addedAt).toLocaleString()}
