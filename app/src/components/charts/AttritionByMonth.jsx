@@ -51,7 +51,7 @@ export default function AttritionByMonth({ data }) {
         ))}
       </select>
 
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="100%" height={300}>
         <LineChart
           data={chartData}
           margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
@@ -60,7 +60,9 @@ export default function AttritionByMonth({ data }) {
           <XAxis
             dataKey={selectedYear === "All Years" ? "year" : "month"}
             interval={0}
+            angle={-45}
             tick={{ fontSize: 12 }}
+            dy={10}
           >
             <Label
               value={selectedYear === "All Years" ? "Year" : "Month"}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -15,6 +15,17 @@ export default function AttritionByManagerDeptChart({ data }) {
   const [selectedDept, setSelectedDept] = useState(departments[0] || "");
 
   if (!selectedDept) return <div>No data available</div>;
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    handleResize(); // Set initial value
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // ✅ Prepare chart data with attritionRate, attritionCount, totalReports
   const chartData = Object.entries(data[selectedDept]).map(
@@ -41,7 +52,15 @@ export default function AttritionByManagerDeptChart({ data }) {
         ))}
       </select>
 
-      <div style={{ width: "100%", height: "400px" }}>
+      <div style={{ 
+        width: "100%", 
+        height: "400px",
+        overflowX: isMobile ? "auto" : "hidden"
+      }}>
+        <div style={{ 
+          minWidth: isMobile ? `${Math.max(chartData.length * 40, window.innerWidth)}px` : "100%",
+          height: "100%"
+        }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
@@ -54,20 +73,13 @@ export default function AttritionByManagerDeptChart({ data }) {
               textAnchor="end"
               interval={0}
               tick={{ fontSize: 11 }}
-            >
-              <Label
-                value="Manager ID"
-                offset={-35}
-                position="insideBottom"
-                style={{ fontWeight: "bold" }}
-              />
-            </XAxis>
+            />
             <YAxis
               domain={[0, 100]}
               tickFormatter={(tick) => `${tick}%`}
             >
               <Label
-                value="Attrition Rate (%)"
+                value="Rate(%) of people left under the manager"
                 angle={-90}
                 position="insideLeft"
                 style={{ textAnchor: "middle", fontWeight: "bold" }}
@@ -94,6 +106,8 @@ export default function AttritionByManagerDeptChart({ data }) {
           </BarChart>
         </ResponsiveContainer>
       </div>
+      </div>
+      <p><b>ManagerID</b></p>
     </div>
   );
 }

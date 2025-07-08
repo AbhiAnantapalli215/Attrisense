@@ -860,6 +860,23 @@ button {
   gap:2rem;
 }
 
+.chart-container1x {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 1rem;
+  flex: 1 1 40%; 
+  min-width: 300px;
+  max-width: 600px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* centers vertically */
+  align-items: center;     /* centers horizontally */
+  text-align: center; 
+  gap:2rem;
+}
+
 .chart-container2 {
   background: #fff;
   border-radius: 8px;
@@ -890,12 +907,6 @@ button {
   width: 45%;
   align-items: center;     /* centers vertically */
   justify-content: center;
-}
-
-@media (max-width: 768px) {
-  .chart-container4 {
-    width: 100%;
-  }
 }
 
 .chart-container5 {
@@ -962,8 +973,49 @@ button {
   width: 100%;
 }
 .kpi-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
 }
+
+@media (max-width: 768px) {
+  .chart-grid{
+    width: 100vw;
+  }
+  .chart-container1{
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+  .chart-container3{
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+  .chart-container2{
+    width: 90% !important;
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+  .kpicardsholder{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .kpi-card-attrition{
+    width: 90vw;
+    padding: 0;
+    margin: 0;
+  }
+  .kpi-card{
+    width: auto !important;
+    min-width: 80%;
+  }
+  .kpi-cards-grid{
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
 
 .kpi-header {
   display: flex;

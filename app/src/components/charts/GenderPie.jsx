@@ -34,7 +34,7 @@ export default function GenderPie({ data }) {
   return (
     <div className="chart-container3">
       <h3>Gender Breakdown</h3>
-      <PieChart width={370} height={370}>
+      <PieChart width={300} height={300}>
         <Pie
           data={chartData}
           dataKey="value"

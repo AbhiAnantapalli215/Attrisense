@@ -27,7 +27,7 @@ export default function GenericBarChart({ data, xKey, yKey, title }) {
   ];
 
   return (
-    <div className="chart-container1">
+    <div className="chart-container1x">
       <h3>{title}</h3>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
