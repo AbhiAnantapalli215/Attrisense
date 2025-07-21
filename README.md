@@ -24,3 +24,11 @@ Attrisense is a full-stack HR analytics dashboard that helps HR managers monitor
    cd app
    npm install
    npm run dev
+
+
+   
+## 📜 License
+
+This project is licensed under the [Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/) license.
+
+You are free to use, share, and modify the code for **educational or personal purposes only**. Commercial use is not allowed without explicit permission.
